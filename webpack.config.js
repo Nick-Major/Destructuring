@@ -1,5 +1,6 @@
 const path = require('node:path');
 const HtmlWebPackPlugin = require('html-webpack-plugin');
+const ESLintPlugin = require('eslint-webpack-plugin');
 
 module.exports = {
   entry: './src/index.js',
@@ -12,10 +13,15 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-        },
+        loader: 'babel-loader',
+        exclude: /(node_modules|bower_components)/,
+      },
+      {
+        test: /\.js$/,
+        loader: 'eslint-loader',
+        include: [
+            path.resolve(__dirname, "src"),
+        ],
       },
       {
         test: /\.html$/,
@@ -37,6 +43,7 @@ module.exports = {
       template: './src/index.html',
       filename: './index.html',
     }),
+    new ESLintPlugin()
   ],
   devServer: {
     watchFiles: path.join(__dirname, 'src'),
